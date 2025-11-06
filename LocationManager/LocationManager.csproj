@@ -123,6 +123,7 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include=".gitignore"/>
+        <Content Include="LocationManager.dll" />
     </ItemGroup>
     <ItemGroup>
       <Compile Include="LocationManager.cs" />
