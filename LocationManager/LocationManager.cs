@@ -12,6 +12,7 @@ using SoftReferenceableAssets;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+[PublicAPI]
 public class Logger
 {
 	public event Action<string>? OnWarning;
@@ -173,16 +174,7 @@ public static class LocationManager
 	    foreach (KeyValuePair<string, RoomReference> kvp in RoomReference.rooms)
 	    {
 		    DungeonDB.RoomData data = kvp.Value.Data;
-		    if (__instance.m_roomByHash.Exists(data.m_prefab.m_assetID)) continue;
-		    logger.LogDebug("[Location Manager] Room by Hash missing: " + kvp.Key + " fixing...");
-		    if (__instance.m_roomByHash.ContainsKey(data.Hash))
-		    {
-			    logger.LogWarning("[Location Manager] Room hash already exists: " + kvp.Key);
-		    }
-		    else
-		    {
-			    __instance.m_roomByHash[data.Hash] = data;
-		    }
+		    if (!__instance.m_roomByHash.ContainsKey(data.Hash)) __instance.m_roomByHash[data.Hash] = data;
 	    }
     }
 
@@ -536,7 +528,7 @@ public static class LocationManager
 		    [InternalName("Icon 4")]Portal,
 		    [InternalName("Death")]Death,
 		    [InternalName("Bed")]Bed,
-		    [InternalName("Should")]Shout,
+		    [InternalName("Shout")]Shout,
 		    [InternalName("Boss")]Boss,
 		    [InternalName("Player")]Player,
 		    [InternalName("RandomEvent")]Event,
@@ -754,7 +746,7 @@ public static class PrefabManager
             if (!prefab.GetComponent<ZNetView>()) continue;
             if (__instance.m_prefabs.Exists(prefab))
             {
-	            LocationManager.logger.LogWarning($"[Location Manager] Prefab {prefab.name} already exists");
+	            LocationManager.logger.LogDebug($"[Location Manager] Prefab {prefab.name} already exists");
             }
             else
                 __instance.m_prefabs.Add(prefab);
